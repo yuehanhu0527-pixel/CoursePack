@@ -1,6 +1,9 @@
 import { useState } from 'react'
 import './App.css'
 
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ||
+  'http://127.0.0.1:8000'
 
 function formatLabel(text) {
   if (!text) return ''
@@ -165,7 +168,7 @@ function App() {
 
     try {
       const response = await fetch(
-        'http://127.0.0.1:8000/coursepack',
+        `${API_BASE_URL}/coursepack`,
         {
           method: 'POST',
 
@@ -239,7 +242,7 @@ function App() {
 
     try {
       const validationResponse = await fetch(
-        'http://127.0.0.1:8000/validate-input',
+        `${API_BASE_URL}/validate-input`,
         {
           method: 'POST',
 
@@ -301,7 +304,7 @@ function App() {
 
     try {
       const response = await fetch(
-        'http://127.0.0.1:8000/export-pdf',
+        `${API_BASE_URL}/export-pdf`,
         {
           method: 'POST',
 
