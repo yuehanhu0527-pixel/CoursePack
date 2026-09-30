@@ -192,14 +192,6 @@ def alignment_node(state: CoursePackState):
         worksheet=state.get("worksheet")
     )
 
-    print("\n=== ALIGNMENT REPORT ===")
-    print(alignment_report.model_dump_json(indent=2))
-    print("========================\n")
-
-    return {
-        "alignment_report": alignment_report
-    }
-
     return {
         "alignment_report": alignment_report
     }
