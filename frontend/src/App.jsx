@@ -5,6 +5,7 @@ const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL ||
   'http://127.0.0.1:8000'
 
+
 function formatLabel(text) {
   if (!text) return ''
 
@@ -151,6 +152,18 @@ function App() {
   ] = useState(null)
 
 
+  function applyExample(example) {
+    setGrade(example.grade)
+    setSubject(example.subject)
+    setObjective(example.objective)
+    setClassLength(example.classLength)
+    setQuizQuestions(example.quizQuestions)
+
+    setError('')
+    setValidationWarning(null)
+  }
+
+
   async function generateCoursePack(
     subjectToUse = subject
   ) {
@@ -268,13 +281,11 @@ function App() {
         await validationResponse.json()
 
       if (validationData.match) {
-
         setLoading(false)
 
         await generateCoursePack(subject)
 
       } else {
-
         setValidationWarning(validationData)
 
         setLoading(false)
@@ -282,7 +293,6 @@ function App() {
       }
 
     } catch (err) {
-
       setError(err.message)
 
       setLoading(false)
@@ -331,81 +341,60 @@ function App() {
         document.createElement('a')
 
       link.href = url
-
       link.download = 'coursepack.pdf'
 
       document.body.appendChild(link)
 
       link.click()
-
       link.remove()
 
       window.URL.revokeObjectURL(url)
 
     } catch (err) {
-
       setError(err.message)
 
     } finally {
-
       setExportingPdf(false)
     }
   }
 
 
+  const examples = [
+    {
+      title: 'Two-step equations',
+      meta: 'Grade 7 · Math',
+      grade: '7',
+      subject: 'Math',
+      objective:
+        'Students will solve two-step equations.',
+      classLength: '55',
+      quizQuestions: '5',
+    },
+    {
+      title: 'Plant life cycles',
+      meta: 'Grade 4 · Science',
+      grade: '4',
+      subject: 'Science',
+      objective:
+        'Students will explain the stages of a plant life cycle.',
+      classLength: '45',
+      quizQuestions: '5',
+    },
+    {
+      title: 'Theme and evidence',
+      meta: 'Grade 8 · ELA',
+      grade: '8',
+      subject: 'English Language Arts',
+      objective:
+        'Students will identify a theme and support it with textual evidence.',
+      classLength: '55',
+      quizQuestions: '5',
+    },
+  ]
+
+
   return (
-    <div className="page-layout">
-
-      {/* ==========================================
-          SIDEBAR
-      ========================================== */}
-
-      <aside className="sidebar">
-
-        <div className="sidebar-title">
-          CoursePack
-        </div>
-
-        <a href="#top">
-          Create Lesson
-        </a>
-
-        {result?.blueprint && (
-          <a href="#blueprint">
-            Lesson Blueprint
-          </a>
-        )}
-
-        {result?.lesson_resources?.sections && (
-          <a href="#resources">
-            Lesson Resources
-          </a>
-        )}
-
-        {result?.worksheet && (
-          <a href="#worksheet">
-            Worksheet
-          </a>
-        )}
-
-        {result?.quiz && (
-          <a href="#quiz">
-            Quiz
-          </a>
-        )}
-
-        {result?.reading && (
-          <a href="#reading">
-            Reading
-          </a>
-        )}
-
-      </aside>
-
-
-      {/* ==========================================
-          MAIN CONTENT
-      ========================================== */}
+    <div className="page-shell">
 
       <main
         id="top"
@@ -413,276 +402,329 @@ function App() {
       >
 
         <div className="decor decor-one"></div>
-
         <div className="decor decor-two"></div>
+        <div className="decor decor-three"></div>
 
 
-        {/* ==========================================
-            HEADER
-        ========================================== */}
+        {/* HERO */}
 
-        <div className="title-row">
+        <section className="hero">
 
-          <h1>
-            CoursePack
-          </h1>
+          <div className="title-row">
+            <h1>CoursePack</h1>
 
-          <span className="tag">
-            AI Lesson Planner
-          </span>
+            <span className="tag">
+              AI Lesson Planner
+            </span>
+          </div>
 
-        </div>
+          <p className="hero-subtitle">
+            Build a coherent lesson package from one instructional objective.
+          </p>
 
-
-        {/* ==========================================
-            INPUT FORM
-        ========================================== */}
-
-        <div className="form-card">
-
-          <select
-            value={grade}
-            onChange={(e) =>
-              setGrade(e.target.value)
-            }
-          >
-
-            <option value="">
-              Select Grade
-            </option>
-
-            {Array.from(
-              { length: 12 },
-              (_, index) => (
-                <option
-                  key={index + 1}
-                  value={index + 1}
-                >
-                  Grade {index + 1}
-                </option>
-              )
-            )}
-
-          </select>
+        </section>
 
 
-          <select
-            value={subject}
-            onChange={(e) =>
-              setSubject(e.target.value)
-            }
-          >
+        {/* INPUT */}
 
-            <option value="">
-              Select Subject
-            </option>
+        <section className="create-section">
 
-            <option value="Math">
-              Math
-            </option>
+          <div className="section-heading">
+            <span className="eyebrow">
+              CREATE A LESSON
+            </span>
 
-            <option value="Science">
-              Science
-            </option>
-
-            <option value="English Language Arts">
-              English Language Arts
-            </option>
-
-            <option value="Social Studies">
-              Social Studies
-            </option>
-
-            <option value="Computer Science">
-              Computer Science
-            </option>
-
-            <option value="Art">
-              Art
-            </option>
-
-            <option value="Music">
-              Music
-            </option>
-
-            <option value="Health">
-              Health
-            </option>
-
-            <option value="Physical Education">
-              Physical Education
-            </option>
-
-            <option value="World Languages">
-              World Languages
-            </option>
-
-            <option value="Economics">
-              Economics
-            </option>
-
-            <option value="Psychology">
-              Psychology
-            </option>
-
-            <option value="Environmental Science">
-              Environmental Science
-            </option>
-
-            <option value="Engineering">
-              Engineering
-            </option>
-
-          </select>
+            <h2>
+              What are you teaching?
+            </h2>
+          </div>
 
 
-          <input
-            type="text"
-            placeholder="Lesson Objective"
-            value={objective}
-            onChange={(e) =>
-              setObjective(e.target.value)
-            }
-          />
+          <div className="form-card">
+
+            <select
+              value={grade}
+              onChange={(e) =>
+                setGrade(e.target.value)
+              }
+            >
+              <option value="">
+                Select Grade
+              </option>
+
+              {Array.from(
+                { length: 12 },
+                (_, index) => (
+                  <option
+                    key={index + 1}
+                    value={index + 1}
+                  >
+                    Grade {index + 1}
+                  </option>
+                )
+              )}
+            </select>
 
 
-          <input
-            type="number"
-            min="1"
-            placeholder="Class Length (minutes)"
-            value={classLength}
-            onChange={(e) =>
-              setClassLength(e.target.value)
-            }
-          />
+            <select
+              value={subject}
+              onChange={(e) =>
+                setSubject(e.target.value)
+              }
+            >
+              <option value="">
+                Select Subject
+              </option>
+
+              <option value="Math">
+                Math
+              </option>
+
+              <option value="Science">
+                Science
+              </option>
+
+              <option value="English Language Arts">
+                English Language Arts
+              </option>
+
+              <option value="Social Studies">
+                Social Studies
+              </option>
+
+              <option value="Computer Science">
+                Computer Science
+              </option>
+
+              <option value="Art">
+                Art
+              </option>
+
+              <option value="Music">
+                Music
+              </option>
+
+              <option value="Health">
+                Health
+              </option>
+
+              <option value="Physical Education">
+                Physical Education
+              </option>
+
+              <option value="World Languages">
+                World Languages
+              </option>
+
+              <option value="Economics">
+                Economics
+              </option>
+
+              <option value="Psychology">
+                Psychology
+              </option>
+
+              <option value="Environmental Science">
+                Environmental Science
+              </option>
+
+              <option value="Engineering">
+                Engineering
+              </option>
+            </select>
 
 
-          <select
-            value={quizQuestions}
-            onChange={(e) =>
-              setQuizQuestions(e.target.value)
-            }
-          >
-
-            <option value="3">
-              3 Quiz Questions
-            </option>
-
-            <option value="5">
-              5 Quiz Questions
-            </option>
-
-            <option value="10">
-              10 Quiz Questions
-            </option>
-
-          </select>
+            <input
+              type="text"
+              placeholder="Lesson Objective"
+              value={objective}
+              onChange={(e) =>
+                setObjective(e.target.value)
+              }
+            />
 
 
-          <button
-            onClick={handleSubmit}
-            disabled={loading}
-          >
-            {
-              loading
-                ? 'Working...'
-                : 'Generate CoursePack'
-            }
-          </button>
+            <input
+              type="number"
+              min="1"
+              placeholder="Class Length (minutes)"
+              value={classLength}
+              onChange={(e) =>
+                setClassLength(e.target.value)
+              }
+            />
 
 
-          {/* ======================================
-              INPUT VALIDATION WARNING
-          ====================================== */}
+            <select
+              value={quizQuestions}
+              onChange={(e) =>
+                setQuizQuestions(e.target.value)
+              }
+            >
+              <option value="3">
+                3 Quiz Questions
+              </option>
 
-          {validationWarning && (
+              <option value="5">
+                5 Quiz Questions
+              </option>
 
-            <div className="validation-warning">
-
-              <h3>
-                Subject Check
-              </h3>
-
-              <p>
-                Your lesson objective may fit{' '}
-
-                <strong>
-                  {
-                    validationWarning
-                      .suggested_subject
-                  }
-                </strong>{' '}
-
-                better than{' '}
-
-                <strong>
-                  {subject}
-                </strong>.
-              </p>
-
-              <p>
-                {validationWarning.reason}
-              </p>
+              <option value="10">
+                10 Quiz Questions
+              </option>
+            </select>
 
 
-              <div className="validation-actions">
-
-                <button
-                  className="secondary-button"
-                  onClick={() => {
-
-                    setValidationWarning(null)
-
-                    generateCoursePack(subject)
-                  }}
-                >
-                  Keep {subject}
-                </button>
+            <button
+              className="generate-button"
+              onClick={handleSubmit}
+              disabled={loading}
+            >
+              {
+                loading
+                  ? 'Working...'
+                  : 'Generate CoursePack'
+              }
+            </button>
 
 
-                <button
-                  onClick={() => {
+            {validationWarning && (
 
-                    const newSubject =
+              <div className="validation-warning">
+
+                <h3>
+                  Subject Check
+                </h3>
+
+                <p>
+                  Your lesson objective may fit{' '}
+
+                  <strong>
+                    {
                       validationWarning
                         .suggested_subject
+                    }
+                  </strong>{' '}
 
-                    setSubject(newSubject)
+                  better than{' '}
 
-                    setValidationWarning(null)
+                  <strong>
+                    {subject}
+                  </strong>.
+                </p>
 
-                    generateCoursePack(
-                      newSubject
-                    )
-                  }}
-                >
-                  Use {
-                    validationWarning
-                      .suggested_subject
-                  }
-                </button>
+                <p>
+                  {validationWarning.reason}
+                </p>
+
+
+                <div className="validation-actions">
+
+                  <button
+                    className="secondary-button"
+                    onClick={() => {
+                      setValidationWarning(null)
+
+                      generateCoursePack(subject)
+                    }}
+                  >
+                    Keep {subject}
+                  </button>
+
+
+                  <button
+                    onClick={() => {
+                      const newSubject =
+                        validationWarning
+                          .suggested_subject
+
+                      setSubject(newSubject)
+
+                      setValidationWarning(null)
+
+                      generateCoursePack(
+                        newSubject
+                      )
+                    }}
+                  >
+                    Use {
+                      validationWarning
+                        .suggested_subject
+                    }
+                  </button>
+
+                </div>
 
               </div>
 
+            )}
+
+
+            {error && (
+              <p className="error">
+                {error}
+              </p>
+            )}
+
+          </div>
+
+        </section>
+
+
+        {/* EXAMPLES */}
+
+        {!result && !loading && (
+
+          <section className="examples-section">
+
+            <div className="examples-heading">
+              <span className="eyebrow blue-eyebrow">
+                NEED AN IDEA?
+              </span>
+
+              <h2>
+                Try an example
+              </h2>
             </div>
 
-          )}
+
+            <div className="example-grid">
+
+              {examples.map((example) => (
+
+                <button
+                  key={example.title}
+                  type="button"
+                  className="example-card"
+                  onClick={() =>
+                    applyExample(example)
+                  }
+                >
+
+                  <span className="example-meta">
+                    {example.meta}
+                  </span>
+
+                  <span className="example-title">
+                    {example.title}
+                  </span>
+
+                  <span className="example-arrow">
+                    →
+                  </span>
+
+                </button>
+
+              ))}
+
+            </div>
+
+          </section>
+
+        )}
 
 
-          {error && (
-
-            <p className="error">
-              {error}
-            </p>
-
-          )}
-
-        </div>
-
-
-        {/* ==========================================
-            LOADING
-        ========================================== */}
+        {/* LOADING */}
 
         {loading && (
 
@@ -707,34 +749,58 @@ function App() {
         )}
 
 
-        {/* ==========================================
-            EXPORT PDF
-        ========================================== */}
+        {/* RESULT NAV */}
 
         {result && !loading && (
 
-          <div className="export-actions">
+          <nav className="result-nav">
+
+            <a href="#blueprint">
+              Blueprint
+            </a>
+
+            {result?.lesson_resources?.sections && (
+              <a href="#resources">
+                Resources
+              </a>
+            )}
+
+            {result?.worksheet && (
+              <a href="#worksheet">
+                Worksheet
+              </a>
+            )}
+
+            {result?.quiz && (
+              <a href="#quiz">
+                Quiz
+              </a>
+            )}
+
+            {result?.reading && (
+              <a href="#reading">
+                Reading
+              </a>
+            )}
 
             <button
-              className="secondary-button"
+              className="export-button"
               onClick={handleExportPdf}
               disabled={exportingPdf}
             >
               {
                 exportingPdf
-                  ? 'Exporting PDF...'
+                  ? 'Exporting...'
                   : 'Export PDF'
               }
             </button>
 
-          </div>
+          </nav>
 
         )}
 
 
-        {/* ==========================================
-            LESSON BLUEPRINT
-        ========================================== */}
+        {/* BLUEPRINT */}
 
         {result?.blueprint && (
 
@@ -766,7 +832,6 @@ function App() {
               <strong>
                 Class Length:
               </strong>{' '}
-
               {result.blueprint.class_length} minutes
             </p>
 
@@ -778,11 +843,9 @@ function App() {
             <ul>
               {result.blueprint.concepts?.map(
                 (concept, index) => (
-
                   <li key={index}>
                     {concept}
                   </li>
-
                 )
               )}
             </ul>
@@ -795,11 +858,9 @@ function App() {
             <ul>
               {result.blueprint.prerequisites?.map(
                 (item, index) => (
-
                   <li key={index}>
                     {item}
                   </li>
-
                 )
               )}
             </ul>
@@ -813,11 +874,9 @@ function App() {
 
               {result.blueprint.vocabulary?.map(
                 (word, index) => (
-
                   <li key={index}>
                     {word}
                   </li>
-
                 )
               )}
 
@@ -834,11 +893,9 @@ function App() {
                 .assessment_targets
                 ?.map(
                   (target, index) => (
-
                     <li key={index}>
                       {target}
                     </li>
-
                   )
                 )}
 
@@ -855,7 +912,6 @@ function App() {
                 .lesson_sequence
                 ?.map(
                   (step, index) => (
-
                     <li key={index}>
 
                       <strong>
@@ -867,7 +923,6 @@ function App() {
                       {step.activity}
 
                     </li>
-
                   )
                 )}
 
@@ -878,9 +933,7 @@ function App() {
         )}
 
 
-        {/* ==========================================
-            LESSON RESOURCES
-        ========================================== */}
+        {/* LESSON RESOURCES */}
 
         {result?.lesson_resources?.sections && (
 
@@ -973,9 +1026,7 @@ function App() {
         )}
 
 
-        {/* ==========================================
-            WORKSHEET
-        ========================================== */}
+        {/* WORKSHEET */}
 
         {result?.worksheet && (
 
@@ -990,16 +1041,13 @@ function App() {
 
 
             {result.worksheet.title && (
-
               <h3>
                 {result.worksheet.title}
               </h3>
-
             )}
 
 
             {result.worksheet.instructions && (
-
               <p>
 
                 <strong>
@@ -1009,12 +1057,10 @@ function App() {
                 {result.worksheet.instructions}
 
               </p>
-
             )}
 
 
             {result.worksheet.problems?.length > 0 && (
-
               <>
 
                 <h3>
@@ -1044,20 +1090,13 @@ function App() {
                 )}
 
               </>
-
             )}
 
 
             {result.worksheet.answer_key?.length > 0 && (
-
               <>
 
-                <div
-                  style={{
-                    marginTop: '18px',
-                    marginBottom: '10px'
-                  }}
-                >
+                <div className="answer-toggle">
 
                   <button
                     className="secondary-button"
@@ -1067,20 +1106,17 @@ function App() {
                       )
                     }
                   >
-
                     {
                       showWorksheetAnswers
                         ? 'Hide Answer Key'
                         : 'Show Answer Key'
                     }
-
                   </button>
 
                 </div>
 
 
                 {showWorksheetAnswers && (
-
                   <>
 
                     <h3>
@@ -1110,11 +1146,9 @@ function App() {
                     )}
 
                   </>
-
                 )}
 
               </>
-
             )}
 
           </div>
@@ -1122,9 +1156,7 @@ function App() {
         )}
 
 
-        {/* ==========================================
-            QUIZ
-        ========================================== */}
+        {/* QUIZ */}
 
         {result?.quiz && (
 
@@ -1139,11 +1171,9 @@ function App() {
 
 
             {result.quiz.title && (
-
               <h3>
                 {result.quiz.title}
               </h3>
-
             )}
 
 
@@ -1152,12 +1182,7 @@ function App() {
                 Boolean(question.correct_answer)
             ) && (
 
-              <div
-                style={{
-                  marginTop: '12px',
-                  marginBottom: '14px'
-                }}
-              >
+              <div className="answer-toggle">
 
                 <button
                   className="secondary-button"
@@ -1167,13 +1192,11 @@ function App() {
                     )
                   }
                 >
-
                   {
                     showQuizAnswers
                       ? 'Hide Correct Answers'
                       : 'Show Correct Answers'
                   }
-
                 </button>
 
               </div>
@@ -1250,9 +1273,7 @@ function App() {
         )}
 
 
-        {/* ==========================================
-            READING
-        ========================================== */}
+        {/* READING */}
 
         {result?.reading && (
 
@@ -1267,20 +1288,16 @@ function App() {
 
 
             {result.reading.title && (
-
               <h3>
                 {result.reading.title}
               </h3>
-
             )}
 
 
             {result.reading.introduction && (
-
               <p>
                 {result.reading.introduction}
               </p>
-
             )}
 
 
@@ -1303,7 +1320,6 @@ function App() {
 
 
             {result.reading.summary && (
-
               <>
 
                 <h3>
@@ -1315,7 +1331,6 @@ function App() {
                 </p>
 
               </>
-
             )}
 
           </div>
